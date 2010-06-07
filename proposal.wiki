@@ -1,0 +1,64 @@
+﻿{zone-template-instance:ZFDEV:Zend Proposal Zone Template}
+
+{zone-data:component-name}
+Zend_Service_Facebook
+{zone-data}
+
+{zone-data:proposer-list}
+[Justin Hart|mailto:jhart@onyxraven.com]
+{zone-data}
+
+{zone-data:liaison}
+TBD
+{zone-data}
+
+{zone-data:revision} 
+1.0.0 - 06 April 2010
+{zone-data}
+
+{zone-data:overview}
+{zone-data}
+
+{zone-data:references}
+ * [Lab source repository on Bitbucket|http://bitbucket.org/onyxraven/zend-contrib/]
+
+See above for copies of related Specifications.
+{zone-data}
+
+{zone-data:requirements}
+{zone-data}
+
+{zone-data:dependencies}
+{zone-data}
+
+{zone-data:operation}
+{zone-data}
+
+{zone-data:milestones}
+{zone-data}
+
+{zone-data:class-list}
+
+Each of these classes also has a Test counterpart.
+{zone-data}
+
+{zone-data:use-cases}
+Use cases are currently being drafted.
+
+||UC-01||
+
+{code}
+
+{zone-data}
+
+{zone-data:skeletons}
+Refer to public repository:
+  * [Lab source repository on Bitbucket|http://bitbucket.org/onyxraven/zend-contrib/]
+
+{code}
+
+{code}
+{zone-data}
+
+{zone-template-instance}
+
