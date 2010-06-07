@@ -1,0 +1,22 @@
+Zend_Service_Facebook
+
+current status
+
+ * 'old' REST client - working
+ * 'new' OAuth2 (for graph) client - working
+   * old rest endpoint inside OAuth2 - working
+
+ * Unit Tests - none
+ * Autoload - currently necessary (exceptions)
+
+TODO list
+
+ * fill out the rest of the old REST api (at least, parts that arent represented in Graph)
+ * make non-autoload-required
+ * move most of the 'identifier' arrays to somewhere central
+ * transition to a 'global' oauth2 client library once one is available
+ * make json/xml parsers symmetrical.  I think currently one makes arrays, one makes objects
+
+Current users:
+ * Photobucket.com
+
