@@ -146,7 +146,7 @@ extends Zend_Service_Facebook_Methods
         if (!$properties) {
             throw new Zend_Service_Facebook_Exception('no valid properties');
         }
-        $stringProperties = Zend_Json::encode($properties);
+        $jsonProperties = Zend_Json::encode($properties);
 
         return $this->callRestMethod('admin.setAppProperties', 
             array('properties' => $jsonProperties));
