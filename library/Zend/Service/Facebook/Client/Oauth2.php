@@ -33,8 +33,7 @@ require_once 'Zend/Service/Facebook/Client.php';
  * @copyright  Copyright (c) 2005-2010 Zend Technologies USA Inc. (http://www.zend.com)
  * @license    http://framework.zend.com/license/new-bsd     New BSD License
  */
-class Zend_Service_Facebook_Client_Oauth2 
-extends Zend_Service_Facebook_Client
+class Zend_Service_Facebook_Client_Oauth2 extends Zend_Service_Facebook_Client
 {
 
     /**
@@ -42,8 +41,9 @@ extends Zend_Service_Facebook_Client
      *
      * @var string
      */
-    static protected $_graph_api_url = 'https://graph.facebook.com/';
-    static protected $_rest_api_url = 'https://api.facebook.com/method/';
+    protected static $_graph_api_url = 'https://graph.facebook.com/';
+
+    protected static $_rest_api_url = 'https://api.facebook.com/method/';
 
     /**
      * Facebok app id
@@ -71,6 +71,7 @@ extends Zend_Service_Facebook_Client
 
     /**
      * Zend_Uri of this web service
+     *
      * @var Zend_Uri_Http
      */
     protected $_uri = null;
@@ -78,9 +79,12 @@ extends Zend_Service_Facebook_Client
     /**
      * Construct 
      * 
-     * @param int $api_id API id
-     * @param string $secret API secret
-     * @param string $access_token_string optional access token to init with
+     * @param int $api_id
+     *            API id
+     * @param string $secret
+     *            API secret
+     * @param string $access_token_string
+     *            optional access token to init with
      *
      * @return void
      */
@@ -120,7 +124,8 @@ extends Zend_Service_Facebook_Client
     /**
      * setAccessToken string 
      * 
-     * @param string $access_token default null
+     * @param string $access_token
+     *            default null
      * @return self
      */
     public function setAccessTokenString($access_token_str = null) 
@@ -164,7 +169,8 @@ extends Zend_Service_Facebook_Client
      * 
      * @return string (== true on has auth)
      */
-    public function hasUserAuth() {
+    public function hasUserAuth()
+    {
         return $this->getAccessTokenString();
     }
 
@@ -178,14 +184,16 @@ extends Zend_Service_Facebook_Client
      *
      * Any formal error encountered is thrown as an exception.
      * 
-     * @param mixed $method Method to call
-     * @param array $args Arguments to send
-     * @param string $response_format which response format to receive
+     * @param mixed $method
+     *            Method to call
+     * @param array $args
+     *            Arguments to send
+     * @param string $response_format
+     *            which response format to receive
      *
      * @return object response data
      */
-    public function callRestMethod($method, $args = array(), 
-        $response_format=Zend_Service_Facebook::RESPONSE_JSON) 
+    public function callRestMethod($method, $args = array(), $response_format = Zend_Service_Facebook::RESPONSE_JSON)
     {
         //build new rest api url
         $url = self::$_rest_api_url;
@@ -196,21 +204,26 @@ extends Zend_Service_Facebook_Client
             $args['access_token'] = $args['session_key'];
             unset($args['session_key']);
         }
-        return $this->makeRequest($url, $args, Zend_Http_Client::POST, $response_format);
+        return $this->makeRequest($url, $args, Zend_Http_Client::POST, array(), $response_format);
     }
 
     /**
      * make generic request
      * 
-     * @param string $url url to request
-     * @param array $args arguments
-     * @param string $http_method http method to use
-     * @param string $response_format response format to receive
+     * @param string $url
+     *            url to request
+     * @param array $args
+     *            arguments
+     * @param string $http_method
+     *            http method to use
+     * @param string $response_format
+     *            response format to receive
+     * @param array $files
+     *            field_name => filepath array
+     *            
      * @return object response data
      */
-    public function makeRequest($url, $args = array(), 
-        $http_method = Zend_Http_Client::GET, 
-        $response_format = Zend_Service_Facebook::RESPONSE_JSON) 
+    public function makeRequest($url, $args = array(), $http_method = Zend_Http_Client::GET, $files = array(), $response_format = Zend_Service_Facebook::RESPONSE_JSON)
     {
         //build new api url
         if (strpos($url, 'https') !== 0) {
@@ -223,6 +236,12 @@ extends Zend_Service_Facebook_Client
             $args['access_token'] = $this->getAccessTokenString();
         }
 
+        if (count($files) > 0) {
+            foreach ($files as $formname => $filename) {
+                $this->setFileUpload($filename, $formname);
+            }
+        }
+        
         //set appropriate parameters
         switch ($http_method) {
             case Zend_Http_Client::GET:
@@ -253,18 +272,22 @@ extends Zend_Service_Facebook_Client
      * @param string $display 
      * @return string
      */
-    public function getAuthorizationUrl($redirect_uri, $scope = array(), $display = null) {
+    public function getAuthorizationUrl($redirect_uri, $scope = array(), $display = null)
+    {
         $params = array(
             'client_id' => $this->getApiId(),
-            'redirect_uri' => $redirect_uri);
+                'redirect_uri' => $redirect_uri
+        );
 
         //todo verify scope as extended permissions
         if ($scope) {
-            if (is_array($scope)) $scope = implode(',', $scope);
+            if (is_array($scope))
+                $scope = implode(',', $scope);
             $params['scope'] = $scope;
         }
         //todo verify display allowed values
-        if ($display) $params['display'] = $display;
+        if ($display)
+            $params['display'] = $display;
 
         return self::$_graph_api_url . 'oauth/authorize?'.http_build_query($params);
     }
@@ -272,9 +295,12 @@ extends Zend_Service_Facebook_Client
     /**
      * exchange authorization code for access token
      * 
-     * @param string $redirect_uri (same as with getAuthorizationUrl)
-     * @param string $code code back from facebook callback
-     * @param bool $set set the token on the current client
+     * @param string $redirect_uri
+     *            (same as with getAuthorizationUrl)
+     * @param string $code
+     *            code back from facebook callback
+     * @param bool $set
+     *            set the token on the current client
      * @return string
      */
     public function getAccessToken($redirect_uri, $code, $set = true) 
@@ -283,35 +309,40 @@ extends Zend_Service_Facebook_Client
             'client_id' => $this->getApiId(),
             'client_secret' => $this->getApiSecret(),
             'redirect_uri' => $redirect_uri,
-            'code' => $code,
+                'code' => $code
             );
 
         //facebook currently returns the access token form urlencoded (like old oauth1.0)
-        $result = $this->makeRequest('oauth/access_token', $params, Zend_Http_Client::POST, Zend_Service_Facebook::RESPONSE_QUERY);
+        $result = $this->makeRequest('oauth/access_token', $params, Zend_Http_Client::POST, array(), Zend_Service_Facebook::RESPONSE_QUERY);
         $token = $result['access_token'];
 
-        if ($set) $this->setAccessTokenString($token);
+        if ($set)
+            $this->setAccessTokenString($token);
         return $result;
     }
 
     /**
      * exchange a list of session tokens for oauth access tokens
      * 
-     * @param array $sessions list of sessions
-     * @param bool $set set the token on the current client (first/only one)
+     * @param array $sessions
+     *            list of sessions
+     * @param bool $set
+     *            set the token on the current client (first/only one)
      * @return object
      */
     public function upgradeSession($sessions, $set = true) 
     {
-        if (is_array($sessions)) $sessions = implode(',', $sessions);
+        if (is_array($sessions)) {
+            $sessions = implode(',', $sessions);
+        }
         $params = array(
             'type' => 'client_cred',
             'client_id' => $this->getApiId(),
             'client_secret' => $this->getApiSecret(),
-            'sessions' => $sessions,
+                'sessions' => $sessions
             );
 
-        $result = $this->makeRequest('oauth/exchange_sessions', $params, Zend_Http_Client::POST, Zend_Service_Facebook::RESPONSE_JSON);
+        $result = $this->makeRequest('oauth/exchange_sessions', $params, Zend_Http_Client::POST, array(), Zend_Service_Facebook::RESPONSE_JSON);
 
         if ($set) {
             $token = current($result);
