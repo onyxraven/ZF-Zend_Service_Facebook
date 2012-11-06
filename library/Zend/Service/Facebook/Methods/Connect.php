@@ -99,7 +99,7 @@ extends Zend_Service_Facebook_Methods
     public function unregisterUsers(array $emailHashes) 
     {
         $jsonHashes = array();
-        foreach ($accounts as $a) {
+        foreach ($emailHashes as $a) {
             if ($a instanceof Zend_Service_Facebook_Data_ConnectAccount) {
                 $jsonHashes[] = $a->email_hash;
             } else {
