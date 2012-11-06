@@ -352,4 +352,34 @@ class Zend_Service_Facebook_Client_Oauth2 extends Zend_Service_Facebook_Client
         return $result;
     }
 
+    /**
+     * By default most Access Tokens have a finite validity period that is generally around 1 to 2 hours long.
+     * In order to continue using these tokens after the expire time, they need to be extended.
+     *
+     * @param string $access_token
+     *            valid short-lived Token. null will exchange preSet one
+     * @param bool $set
+     *            set the token on the current client (first/only one)
+     * @return object
+     */
+    public function extendToken($access_token = null, $set = true)
+    {
+        if (is_null($access_token)) {
+            $access_token = $this->getAccessTokenString();
+        }
+        $params = array(
+                'grant_type' => 'fb_exchange_token',
+                'client_id' => $this->getApiId(),
+                'client_secret' => $this->getApiSecret(),
+                'fb_exchange_token' => $access_token
+        );
+        
+        $result = $this->makeRequest('oauth/access_token', $params, Zend_Http_Client::POST, array(), Zend_Service_Facebook::RESPONSE_QUERY);
+        
+        if ($set) {            
+            $this->setAccessTokenString($result['access_token']);
+        }
+        
+        return $result;
+    }
 }
