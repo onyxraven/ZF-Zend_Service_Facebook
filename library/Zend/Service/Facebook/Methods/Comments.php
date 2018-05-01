@@ -73,7 +73,7 @@ extends Zend_Service_Facebook_Methods
      * @link http://developers.facebook.com/docs/reference/rest/comments.add 
      */
     public function add($text, $xid = null, $object_id = null,
-                        $title = null, $url = null, $publish_to_tream = false,
+                        $title = null, $url = null, $publish_to_stream = false,
                         $uid = null, $session_key = null) 
     {
         $args = array('text'=>$text);
